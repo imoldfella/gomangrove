@@ -1,9 +1,2 @@
----
-title: welcome
----
-this is a page
----
-and this is a page
----
-and this is a page
 
+running this programs starts a server that listens on port 8081
