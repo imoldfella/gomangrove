@@ -12,6 +12,7 @@ import (
 	"github.com/adrg/frontmatter"
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/parser"
+	cp "github.com/otiai10/copy"
 )
 
 var builder = NewBuilder()
@@ -36,7 +37,7 @@ func writeMd(dir string, data string) string {
 }
 
 func (sb *Subject) href(lesson, page int) string {
-	if page < 0 || page >= len(sb.Lesson[lesson].Slide) {
+	if (lesson == 0 && page == 0) || page < 0 || page >= len(sb.Lesson[lesson].Slide) {
 		return sb.Hash + ".html"
 	}
 	return fmt.Sprintf("%s.%d.%d.html", sb.Hash, lesson, page)
@@ -48,10 +49,11 @@ func (sb *Subject) Write(dir string) string {
 	// this is hard to go backwards!
 	// the link is in the page.
 	// maybe we need to use one hash for the entire lesson.
+
 	for z, o := range sb.Lesson {
 		for i, c := range o.Slide {
 			html := Md(c)
-			page = builder.Slide(navbar, html, sb.href(z, i+1))
+			page := builder.Slide(navbar, html, sb.href(z, i+1))
 			os.WriteFile(p+"/"+sb.href(z, i), []byte(page), 0666)
 
 		}
@@ -60,8 +62,10 @@ func (sb *Subject) Write(dir string) string {
 	}
 
 	// we need to write a lesson index and return a link
-	b := builder.LessonSorter(sb)
-	os.WriteFile(p+"/"+sb.Hash+".html", []byte(b), 0666)
+	if false {
+		b := builder.LessonSorter(sb)
+		os.WriteFile(p+"/"+sb.Hash+".html", []byte(b), 0666)
+	}
 
 	return "blob/" + sb.Hash + ".html"
 }
@@ -85,13 +89,16 @@ func Md(mdx string) string {
 func loadTextbook(path string) *Subject {
 	input, _ := os.ReadFile(path)
 	inputs := string(input)
-	r := &Subject{}
+	r := &Subject{
+		Hash: hash(input),
+	}
 
 	rest, err := frontmatter.Parse(strings.NewReader(inputs), &r.FrontMatter)
 	if err != nil {
 		panic("bad frontmatter")
 	}
 	// we can split the rest on \n--\n to get slides.
+	// the first slide is the table of contents, there might not be more.
 	o := strings.Split(string(rest), "\n---\n")
 	isTitle := func(c string) bool {
 		return c[0:2] == "# "
@@ -105,6 +112,8 @@ func loadTextbook(path string) *Subject {
 		bx.Number = len(r.Lesson)
 		bx.Slide = append(bx.Slide, x)
 	}
+	// r.Contents = r.Lesson[0]
+	// r.Lesson = r.Lesson[1:]
 	return r
 }
 
@@ -143,12 +152,11 @@ func walkFolders(p string, f *Folder, depth int) {
 // everything else can be a blob?
 // should everything else go in a subdirectory to support more schools?
 func schoolBuilder(in string, out string) {
+	cp.Copy(in, out)
 	// walk through the syllabus directory and create
 	// a parallel directory with markdown converted to html
 	// also create the index html files for linking to syllabus
 	// and sitemap.xml file.
-	os.RemoveAll(out)
-	os.Mkdir(out, os.ModePerm)
 	os.Mkdir(out+"/blob", os.ModePerm)
 	b, _ := os.ReadFile(in + "/index.json")
 	var sc SchoolJson
@@ -165,9 +173,8 @@ func schoolBuilder(in string, out string) {
 
 	// we can build all the subjects. Skip this step if hash=0
 	for _, o := range sc.Subject {
-		if o.Hash != "" {
-			s := loadTextbook(in + "/" + o.Hash + ".md")
-			s.Hash = o.Hash
+		if !o.Folder {
+			s := loadTextbook(in + "/" + o.Title + ".md")
 			o.Link = s.Write(out)
 		}
 	}
@@ -196,7 +203,7 @@ func schoolBuilder(in string, out string) {
 			at.More = append(at.More, o)
 		}
 		// a folder will not have a hash
-		if len(o.Hash) == 0 {
+		if o.Folder {
 			at.Folder[o.Title] = &Folder{
 				Title:   o.Title,
 				Welcome: "",

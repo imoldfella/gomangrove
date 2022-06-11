@@ -1,0 +1,123 @@
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Arial,
+    Helvetica,
+    sans-serif
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: #000000;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: black;
+    color: white
+  }
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.content {
+  display: block;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.navbar {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 4px;
+  padding-left: 8px;
+  font-size: 24px;
+  background-color: rgb(31, 27, 27);
+  align-items: center;
+}
+
+.navbar-item {
+  display: inline-block;
+}
+
+.navbar-right {
+  display: flex;
+  margin-right: 24px
+}
+
+.p-4 {
+  padding: 4px
+}
+
+.appicon {
+  text-align: center
+}
+
+.button {
+  display: block
+}
+
+
+
+.container {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cat {
+  border-radius: 8px;
+  height: 128px;
+}
+
+.caption {
+  text-align: center;
+  width: 96px;
+  text-overflow: ellipsis;
+  height: 38px;
+  overflow: hidden;
+}
+
+.card {
+  margin: 8px;
+  text-decoration: none;
+  color: white;
+}
+
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+
+  padding: 4px;
+}
+
+.caption2 {
+  background-color: rgb(28, 26, 26);
+  text-align: center;
+  padding: 16px;
+  border-radius: 8px;
+  width: 24px;
+  color: white;
+}

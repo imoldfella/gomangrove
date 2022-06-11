@@ -26,4 +26,5 @@ require (
 	github.com/noelyahan/mergi v0.0.0-20190514155713-69271a4267fb
 	github.com/otiai10/copy v1.7.0
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
+	gopkg.in/yaml.v3 v3.0.1
 )

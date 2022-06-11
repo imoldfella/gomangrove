@@ -3,8 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"sort"
 	"text/template"
+
+	"gopkg.in/yaml.v2"
 )
 
 var defaultTitle = "📚 mangrove"
@@ -36,23 +39,44 @@ type SchoolJson struct {
 	Welcome string
 	Subject []*SubjectLinkJson
 }
+
 type SubjectLinkJson struct {
 	Title string
 	Sort  string
-	Hash  string
-	Image string
-	Path  string
-	Pin   bool
-	Link  string
+	//Hash  string
+	Image  string
+	Path   string
+	Pin    bool
+	Folder bool
+
+	// we don't load this, we set it when build the page.
+	Link string
 }
 
+// type SubjectLinkJson struct {
+// 	Title string
+// 	Sort  string
+// 	Hash  string
+// 	Image string
+// 	Path  string
+// 	Pin   bool
+// 	Link  string
+// }
+
+type FrontMatter struct {
+	Title    string `yaml:"title"`
+	Subtitle string `yaml:"subtitle"`
+	MinGrade int    `yaml:"minGrade"`
+	MaxGrade int    `yaml:"maxGrade"`
+}
 type Subject struct {
 	FrontMatter
 	// it would be nice to be able to hash slides or lessons
 	// but then we couldn't statically link within the subject
 	// tradeoffs
-	Hash   string
-	Lesson []Lesson
+	Hash     string
+	Contents Lesson
+	Lesson   []Lesson
 }
 
 // if we need it the lesson title is on the first slide #
@@ -71,6 +95,16 @@ type Builder struct {
 }
 
 func NewBuilder() *Builder {
+	z, e := os.ReadFile("./css.yaml")
+	if e != nil {
+		panic(e)
+	}
+	var m = map[string]string{}
+	e = yaml.Unmarshal(z, &m)
+	if e != nil {
+		panic(e)
+	}
+
 	make := func(name string, code string) *template.Template {
 		t, e := template.New("navbar").Parse(code)
 		if e != nil {
@@ -81,9 +115,9 @@ func NewBuilder() *Builder {
 
 	return &Builder{
 
-		page:       make("page", page),
-		pinList:    make("pinList", pinList),
-		lessonList: make("lessonList", lessonList),
+		page:       make("page", m["page"]),
+		pinList:    make("pinList", m["pinList"]),
+		lessonList: make("lessonList", m["lessonList"]),
 	}
 }
 func (d *Builder) Page(navbar, content string) string {
@@ -96,8 +130,9 @@ func (d *Builder) Page(navbar, content string) string {
 
 func (d *Builder) Slide(navbar, content string, next string) string {
 	link := next
+	// <div class='button'>Next</div>
 	return d.Page("📚 mangrove",
-		fmt.Sprintf(`<a class="content" href="%s">%s<div class='button'>Next</div></a>`, link, content))
+		fmt.Sprintf(`<a class="content" href="%s">%s</a>`, link, content))
 }
 
 func (d *Builder) Folder(f *Folder) string {
