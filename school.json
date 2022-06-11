@@ -1,0 +1,12 @@
+{
+    "welcome": {},
+    "subject": [
+        {
+            "title": "some math",
+            "image": "hash",
+            "hash": "hash",
+            "path": "Grade 1|math|Genius Track",
+            "pin": true
+        }
+    ]
+}
