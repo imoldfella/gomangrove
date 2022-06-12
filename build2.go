@@ -135,21 +135,26 @@ func (d *Builder) Slide(navbar, content string, next string) string {
 		fmt.Sprintf(`<a class="content" href="%s">%s</a>`, link, content))
 }
 
-func (d *Builder) Folder(f *Folder) string {
+// a folder should have pins at the top, maybe at the bottom?
+// or maybe different labels of pins?
+func (d *Builder) Folder(f *Folder, crumbs string) string {
 	var b bytes.Buffer
 
+	// this puts pins in if we have them.
 	if len(f.Pin) > 0 {
 		sort.Slice(f.Pin, func(i, j int) bool {
 			return f.Pin[i].Sort < f.Pin[j].Sort
 		})
 		d.pinList.Execute(&b, &f.Pin)
 	}
+
+	// this is the body of the page
 	sort.Slice(f.More, func(i, j int) bool {
 		return f.More[i].Sort < f.More[j].Sort
 	})
 	d.pinList.Execute(&b, &f.More)
 	return d.Page(f.Title,
-		b.String(),
+		crumbs+b.String(),
 	)
 }
 

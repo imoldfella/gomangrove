@@ -142,8 +142,15 @@ func walkFolders(p string, f *Folder, depth int) {
 	if len(f.Welcome) > 0 {
 		path = fmt.Sprintf("%s/%s.html", p, "index")
 	}
+
+	// we need bread crumbs here, if this is not the root.
+	crumbs := ""
+	if len(f.Link.Title) > 0 {
+		crumbs = "<div class='crumb'>" + f.Link.Title + "</div>"
+	}
+
 	// create a page from the pin and more
-	b := builder.Folder(f)
+	b := builder.Folder(f, crumbs)
 	os.WriteFile(path, []byte(b), 0666)
 
 }

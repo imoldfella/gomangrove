@@ -71,18 +71,27 @@ a:active {
   padding: 4px;
   padding-left: 8px;
   font-size: 24px;
-  background-color: rgb(31, 27, 27);
+  background-color: rgb(18, 18, 18);
   align-items: center;
 
 }
 
 .navbar-item {
-  display: inline-block;
+  padding-top: 8px;
+  vertical-align: middle;
 }
 
 .navbar-right {
   display: flex;
-  margin-right: 24px
+}
+
+.navbar-tool {
+  margin-right: 16px;
+  padding-top: 8px;
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  vertical-align: middle;
 }
 
 .p-4 {
@@ -150,4 +159,9 @@ a:active {
   margin-top: 8px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(106px, 1fr));
+}
+
+.crumb {
+  padding: 8px;
+  font-size: 1.4em;
 }
