@@ -7,6 +7,26 @@
   margin-top: 60px;
 }
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  overflow: visible;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {}
+
 body {
   padding: 0;
   margin: 0;
@@ -53,6 +73,7 @@ a:active {
   font-size: 24px;
   background-color: rgb(31, 27, 27);
   align-items: center;
+
 }
 
 .navbar-item {
@@ -78,22 +99,18 @@ a:active {
 
 
 
-.container {
-  margin-top: 8px;
-  display: flex;
-  flex-wrap: wrap;
-}
 
 .cat {
   border-radius: 8px;
-  height: 128px;
+  height: 90px;
+  width: 90px;
 }
 
 .caption {
   text-align: center;
-  width: 96px;
   text-overflow: ellipsis;
   height: 38px;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -120,4 +137,17 @@ a:active {
   border-radius: 8px;
   width: 24px;
   color: white;
+}
+
+.containerFex {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.container {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(106px, 1fr));
 }

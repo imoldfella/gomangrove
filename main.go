@@ -17,7 +17,7 @@ import (
 func main() {
 	os.Mkdir(".school", os.ModePerm)
 
-	schoolBuilder("sample", ".school")
+	schoolBuilder("/Users/jimhurd/yakdb/gomgen/sample", ".school")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, ".school/"+r.URL.Path[1:])

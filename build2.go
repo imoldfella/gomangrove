@@ -44,11 +44,11 @@ type SubjectLinkJson struct {
 	Title string
 	Sort  string
 	//Hash  string
-	Image  string
-	Path   string
-	Pin    bool
-	Folder bool
-
+	Image   string
+	Path    string
+	Pin     bool
+	Folder  bool
+	Content string
 	// we don't load this, we set it when build the page.
 	Link string
 }

@@ -1,8 +1,9 @@
 pinList: <div class="container">
   {{range . }}
   <a class="card" href='{{.Link}}'>
-  <div class="appicon"> <img alt="{{.Title}}" class='cat' src="{{.Image}}" /></div>
-  <div class="caption">{{.Title}}</div>
+  <div class="appicon"> <img width='90' height='90' alt="{{.Title}}" class='cat' src="{{.Image}}" /></div>
+  <div class="caption tooltip">{{.Title}}
+  <span class="tooltiptext">{{.Title}}</span></div>
   </a>
   {{end}}
   </div>

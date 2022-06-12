@@ -174,7 +174,7 @@ func schoolBuilder(in string, out string) {
 	// we can build all the subjects. Skip this step if hash=0
 	for _, o := range sc.Subject {
 		if !o.Folder {
-			s := loadTextbook(in + "/" + o.Title + ".md")
+			s := loadTextbook(in + "/" + o.Content + ".md")
 			o.Link = s.Write(out)
 		}
 	}
