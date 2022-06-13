@@ -138,9 +138,17 @@ func walkFolders(p string, f *Folder, depth int) {
 	path := fmt.Sprintf("%s/%d.html", p, next)
 	f.Link.Link = fmt.Sprintf("%d.html", next)
 
+	loader := ""
 	next++
 	if len(f.Welcome) > 0 {
 		path = fmt.Sprintf("%s/%s.html", p, "index")
+		loader = `<script>
+		if ('serviceWorker' in navigator) {
+		   window.addEventListener('load', () => {
+			  navigator.serviceWorker.register('/sw.js');
+		   });
+		 }
+		</script>`
 	}
 
 	// we need bread crumbs here, if this is not the root.
@@ -150,7 +158,7 @@ func walkFolders(p string, f *Folder, depth int) {
 	}
 
 	// create a page from the pin and more
-	b := builder.Folder(f, crumbs)
+	b := builder.Folder(f, crumbs, loader)
 	os.WriteFile(path, []byte(b), 0666)
 
 }

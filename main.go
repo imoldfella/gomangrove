@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	cp "github.com/otiai10/copy"
 )
 
 // this program watches the current directory
@@ -22,11 +24,11 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, ".school/"+r.URL.Path[1:])
 	})
-	_, e := copyFile("./style.css", ".school/style.css")
+	e := cp.Copy("src", ".school")
 	if e != nil {
 		panic(e)
 	}
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	log.Fatal(http.ListenAndServe(":8082", nil))
 }
 
 func copyFile(src, dst string) (int64, error) {

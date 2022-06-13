@@ -10,7 +10,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var defaultTitle = "📚 mangrove"
+var defaultTitle = "📚 cedar"
 
 type SchoolTheme struct {
 	Image map[string]string
@@ -120,10 +120,11 @@ func NewBuilder() *Builder {
 		lessonList: make("lessonList", m["lessonList"]),
 	}
 }
-func (d *Builder) Page(navbar, content string) string {
+func (d *Builder) Page(navbar, content string, loader string) string {
 	var b bytes.Buffer
 	d.page.Execute(&b, &PageInfo{
 		Content: content,
+		Loader:  loader,
 	})
 	return b.String()
 }
@@ -131,13 +132,13 @@ func (d *Builder) Page(navbar, content string) string {
 func (d *Builder) Slide(navbar, content string, next string) string {
 	link := next
 	// <div class='button'>Next</div>
-	return d.Page("📚 mangrove",
-		fmt.Sprintf(`<a class="content" href="%s">%s</a>`, link, content))
+	return d.Page("📚 froov",
+		fmt.Sprintf(`<a class="content" href="%s">%s</a>`, link, content), "")
 }
 
 // a folder should have pins at the top, maybe at the bottom?
 // or maybe different labels of pins?
-func (d *Builder) Folder(f *Folder, crumbs string) string {
+func (d *Builder) Folder(f *Folder, crumbs string, loader string) string {
 	var b bytes.Buffer
 
 	// this puts pins in if we have them.
@@ -155,6 +156,7 @@ func (d *Builder) Folder(f *Folder, crumbs string) string {
 	d.pinList.Execute(&b, &f.More)
 	return d.Page(f.Title,
 		crumbs+b.String(),
+		loader,
 	)
 }
 
@@ -163,10 +165,12 @@ func (d *Builder) LessonSorter(pg *Subject) string {
 	d.lessonList.Execute(&b, &pg.Lesson)
 	return d.Page(pg.Title,
 		b.String(),
+		"",
 	)
 }
 
 type PageInfo struct {
 	Title,
 	Content string
+	Loader string
 }
